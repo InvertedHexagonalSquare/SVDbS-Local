@@ -2,6 +2,9 @@
 Lightweight database system coded in C++
 
 The commands are written word-for-word, so command syntax is usually like this:
-> COMMAND
+
+`COMMAND`
+
 Welcome to COMMAND Interface.
-> And then your argument here.
+
+`And then your command here`
