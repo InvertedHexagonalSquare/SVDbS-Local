@@ -1,2 +1,7 @@
 # SVDbS-Local
 Lightweight database system coded in C++
+
+The commands are written word-for-word, so command syntax is usually like this:
+> COMMAND
+Welcome to COMMAND Interface.
+> And then your argument here.
