@@ -4,12 +4,13 @@
 #include <filesystem>
 #include <sstream>
 #include <print>
+#include <optional>
 
 namespace fs = std::filesystem;
 
 fs::path dbPath;
 fs::path cwd = fs::current_path();
-fs::path configPath = cwd / "SVDbS-Local" / "Config" / "Config.txt";
+fs::path configPath = cwd / "Config" / "Config.txt";
 std::string userInput;
 
 void ls(fs::path path) {
@@ -19,9 +20,10 @@ void ls(fs::path path) {
     }
 }
 
-void readConfig(std::string configKeyword) {
+std::string readConfig(std::string configKeyword) {
     std::ifstream configFetch(configPath);
     std::string currentline;
+    std::string result;
     if (!configFetch.is_open())
     {
         std::cerr << "Error fetching Config File, verify Config.txt directory";
@@ -31,18 +33,18 @@ void readConfig(std::string configKeyword) {
         size_t pos = currentline.find(configKeyword);
         if (currentline.find(configKeyword) != std::string::npos)
         {
-            
+            configFetch.close();
+            result = currentline.substr(pos + configKeyword.length());
+            return result;
         }
-        
+
     }
-    configFetch.close();    
+    configFetch.close();
+    return "notfound";
 }
 
 int main() {
     std::cout << "Welcome to SVDbS" << std::endl;
-    while (true)
-    {
-        
-    }
+    std::cout << readConfig("Lang:");
     return 0;
 }
