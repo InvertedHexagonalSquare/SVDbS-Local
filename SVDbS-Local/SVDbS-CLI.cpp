@@ -16,10 +16,14 @@ std::string userInput;
 void ls(fs::path path) {
     for (const auto& entry : std::filesystem::directory_iterator(path))
     {
-        std::cout << entry.path().filename().string();
+        std::cout << entry.path().filename().string() << std::endl;
     }
 }
 
+
+
+// Note that you will need to pass a path string through 
+// a filesystem constructor for correct handling with the ls() function
 std::string readConfig(std::string configKeyword) {
     std::ifstream configFetch(configPath);
     std::string currentline;
@@ -45,6 +49,10 @@ std::string readConfig(std::string configKeyword) {
 
 int main() {
     std::cout << "Welcome to SVDbS" << std::endl;
-    std::cout << readConfig("Lang:");
+    std::cout << readConfig("Lang: ") << std::endl;
+    std::cout << readConfig("dbPath: ") << std::endl;
+    dbPath = readConfig("dbPath: ");
+    fs::path fsdbPath(dbPath);
+    ls(fsdbPath);
     return 0;
 }

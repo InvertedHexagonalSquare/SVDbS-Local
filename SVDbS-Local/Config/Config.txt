@@ -1,1 +1,2 @@
-Lang:English
+Lang: English
+dbPath: C:\Users\famwe\Documents\GitHub\SVDbS-Local\SVDbS-Local\Databases
