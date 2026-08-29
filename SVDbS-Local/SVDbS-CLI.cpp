@@ -4,10 +4,13 @@
 #include <filesystem>
 #include <sstream>
 #include <print>
-#include <optional>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
+
+
+bool running = true;
 fs::path dbPath;
 fs::path cwd = fs::current_path();
 fs::path configPath = cwd / "Config" / "Config.txt";
@@ -47,12 +50,26 @@ std::string readConfig(std::string configKeyword) {
     return "notfound";
 }
 
+
+
 int main() {
-    std::cout << "Welcome to SVDbS" << std::endl;
-    std::cout << readConfig("Lang: ") << std::endl;
-    std::cout << readConfig("dbPath: ") << std::endl;
+    //string to filesystem path
     dbPath = readConfig("dbPath: ");
     fs::path fsdbPath(dbPath);
-    ls(fsdbPath);
+    
+    std::cout << "Welcome to SVDbS" << std::endl;
+    while (running)
+    {
+        std::cout << "> ";
+        std::cin >> userInput;
+        if (userInput == "databases")
+        {
+            ls(fsdbPath);        
+        }
+        
+    }
+    
+
+
     return 0;
 }
