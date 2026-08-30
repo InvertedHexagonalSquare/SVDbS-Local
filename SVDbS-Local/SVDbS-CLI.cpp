@@ -141,7 +141,7 @@ int main() {
         else if (userInput == "help" || userInput == "?")
         {
             std::cout << "Showing commands" << std::endl;
-            std::cout << "help or ?\nexit\nlsdatabases\ncls or clear\nreadDB\nselectdb\neditdb" << std::endl;
+            std::cout << "help or ?\nexit\nlsdatabases\ncls or clear\nreaddb\nselectdb\neditdb\ndeletedb" << std::endl;
             
         }
         else if (userInput == "cls" || userInput == "clear")
@@ -176,6 +176,26 @@ int main() {
                 writeToFile(completedFilepath);
             }
             
+        }
+        else if (userInput == "deletedb")
+        {
+            std::cout << "Enter database to be deleted" << std::endl;
+            std::cout << "Available databases are: " << std::endl;
+            ls(fsdbPath);
+            std::cin >> enteredFilename;
+            if (enteredFilename != "cancel")
+            {
+                completedFilepath = fsdbPath / enteredFilename;
+                try {
+                    if (fs::remove(completedFilepath)) {
+                        std::cout << "File deleted successfully.\n";
+                    } else {
+                        std::cout << "File not found.\n";
+                    }
+                } catch (const fs::filesystem_error& e) {
+                    std::cerr << "Error: " << e.what() << '\n';
+                }                
+            }
         }
         else 
         {
