@@ -2,12 +2,10 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include <sstream>
 #include <print>
-#include <chrono>
+
 
 namespace fs = std::filesystem;
-
 
 
 bool running = true;
@@ -53,7 +51,7 @@ std::string readConfig(std::string configKeyword) {
 
 
 int main() {
-    //string to filesystem path
+    //string path to filesystem path
     dbPath = readConfig("dbPath: ");
     fs::path fsdbPath(dbPath);
     
@@ -64,8 +62,14 @@ int main() {
         std::cin >> userInput;
         if (userInput == "databases")
         {
-            ls(fsdbPath);        
+            std::cout << "Listing databases:" << std::endl;
+            ls(fsdbPath);
         }
+        else if (userInput == "help" || userInput == "?")
+        {
+            std::cout << "Showing commands" << std::endl;
+        }
+        
         
     }
     
