@@ -1,11 +1,15 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <filesystem>
 #include <print>
+#include <vector>
+#include <cstdlib>
 
 
 namespace fs = std::filesystem;
+
 
 
 bool running = true;
@@ -21,7 +25,43 @@ void ls(fs::path path) {
     }
 }
 
+std::vector<std::vector<std::string>> get_matrix_from_DB(const fs::path& setDbPath) {
+    std::vector<std::vector<std::string>> matrix;
+    std::ifstream dataset(setDbPath);
+    std::string line;
+    if (!dataset.is_open())
+    {
+        std::cerr << "Database not found or path invalid. Please reselect database or verify database directory" << std::endl;
+        std::exit(1);
+    }
+    
 
+    while (std::getline(dataset, line))
+    {
+        std::vector<std::string> row;
+        std::stringstream ss(line);
+        std::string cell;
+
+        while (std::getline(ss, cell, ','))
+        {
+            row.push_back(cell);    
+        }
+        matrix.push_back(row);
+    }
+    return matrix;
+}
+
+void printMatrix(const std::vector<std::vector<std::string>>& matrix) {
+    for (const auto& row : matrix)
+    {
+        for (const auto& cell : row)
+        {
+            std::cout << cell << " ";
+        }
+        std::cout << "\n";
+    }
+    
+}
 
 // Note that you will need to pass a path string through 
 // a filesystem constructor for correct handling with the ls() function
@@ -51,16 +91,28 @@ std::string readConfig(std::string configKeyword) {
 
 
 int main() {
+
+
+
     //string path to filesystem path
     dbPath = readConfig("dbPath: ");
     fs::path fsdbPath(dbPath);
+
+    //initialize user defined selectedDatabase and processed completedDBPath
+    std::string selectedDatabase;
+    fs::path completedDBPath;
+
+    //debug messages
+    std::cout << "dbpath: " << dbPath << std::endl;
+    std::cout << "configPath: " << configPath << std::endl; 
     
+    std::system("cls");
     std::cout << "Welcome to SVDbS" << std::endl;
     while (running)
     {
         std::cout << "> ";
         std::cin >> userInput;
-        if (userInput == "databases")
+        if (userInput == "lsdatabases")
         {
             std::cout << "Listing databases:" << std::endl;
             ls(fsdbPath);
@@ -68,12 +120,36 @@ int main() {
         else if (userInput == "help" || userInput == "?")
         {
             std::cout << "Showing commands" << std::endl;
+            std::cout << "help or ?\nexit\nlsdatabases\ncls or clear\nreadDB\nselectdb" << std::endl;
+            
         }
-        
-        
+        else if (userInput == "cls" || userInput == "clear")
+        {
+            std::system("cls");
+        }
+        else if (userInput == "exit")
+        {
+            return 0;
+        }
+        else if (userInput == "selectdb")
+        {
+            std::cout << "Type the name of the database you want to use (including the proper file extensions)" << std::endl;
+            std::cout << "Available Databases are: " << std::endl;
+            ls(fsdbPath);
+            std::cin >> selectedDatabase;
+            std::cout << "Selected " << selectedDatabase << std::endl;
+        }
+        else if (userInput == "readDB")
+        {
+            completedDBPath = fsdbPath / selectedDatabase;
+            auto data = get_matrix_from_DB(completedDBPath);
+            printMatrix(data);
+        }
+        else 
+        {
+            std::cout << userInput << " is not a valid command" << std::endl;
+        }
+   
     }
-    
-
-
     return 0;
 }
