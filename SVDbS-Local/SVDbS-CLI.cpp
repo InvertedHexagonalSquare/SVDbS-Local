@@ -25,6 +25,23 @@ void ls(fs::path path) {
     }
 }
 
+//simple single-line editing of datasheets
+void writeToFile(fs::path filePath) {
+    std::ofstream writeFile(filePath, std::ios::app);
+    std::string writeLine;
+
+    if (!writeFile.is_open())
+    {
+        std::cerr << "could not create/open file" << std::endl;
+        return;
+    }
+    
+    std::cout << "Type in text here according to your database format (like CSV)" << std::endl;
+    std::cin >> writeLine;
+    writeFile << writeLine << std::endl;
+}
+
+
 std::vector<std::vector<std::string>> get_matrix_from_DB(const fs::path& setDbPath) {
     std::vector<std::vector<std::string>> matrix;
     std::ifstream dataset(setDbPath);
@@ -48,6 +65,7 @@ std::vector<std::vector<std::string>> get_matrix_from_DB(const fs::path& setDbPa
         }
         matrix.push_back(row);
     }
+    dataset.close();
     return matrix;
 }
 
@@ -98,8 +116,10 @@ int main() {
     dbPath = readConfig("dbPath: ");
     fs::path fsdbPath(dbPath);
 
-    //initialize user defined selectedDatabase and processed completedDBPath
+    //initialize user defined variables
     std::string selectedDatabase;
+    std::string enteredFilename;
+    fs::path completedFilepath;
     fs::path completedDBPath;
 
     //debug messages
@@ -116,11 +136,12 @@ int main() {
         {
             std::cout << "Listing databases:" << std::endl;
             ls(fsdbPath);
+            std::cout << "\n";
         }
         else if (userInput == "help" || userInput == "?")
         {
             std::cout << "Showing commands" << std::endl;
-            std::cout << "help or ?\nexit\nlsdatabases\ncls or clear\nreadDB\nselectdb" << std::endl;
+            std::cout << "help or ?\nexit\nlsdatabases\ncls or clear\nreadDB\nselectdb\neditdb" << std::endl;
             
         }
         else if (userInput == "cls" || userInput == "clear")
@@ -139,17 +160,27 @@ int main() {
             std::cin >> selectedDatabase;
             std::cout << "Selected " << selectedDatabase << std::endl;
         }
-        else if (userInput == "readDB")
+        else if (userInput == "readdb")
         {
             completedDBPath = fsdbPath / selectedDatabase;
             auto data = get_matrix_from_DB(completedDBPath);
             printMatrix(data);
         }
+        else if (userInput == "editdb")
+        {
+            std::cout << "Enter full name of file to be edited/created" << std::endl;
+            std::cin >> enteredFilename;
+            if (enteredFilename != "cancel")
+            {
+                completedFilepath = fsdbPath / enteredFilename;
+                writeToFile(completedFilepath);
+            }
+            
+        }
         else 
         {
             std::cout << userInput << " is not a valid command" << std::endl;
         }
-   
     }
     return 0;
 }
