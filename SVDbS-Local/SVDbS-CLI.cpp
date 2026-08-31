@@ -157,6 +157,11 @@ int main() {
             std::cout << "Available Databases are: " << std::endl;
             ls(fsdbPath);
             std::cin >> selectedDatabase;
+            if (selectedDatabase == "cancel")
+            {
+                selectedDatabase = "None";
+            }
+            
             std::cout << "Selected " << selectedDatabase << std::endl;
         }
         else if (userInput == "readdb")
@@ -168,6 +173,8 @@ int main() {
         else if (userInput == "editdb")
         {
             std::cout << "Enter full name of file to be edited/created" << std::endl;
+            std::cout << "Available databases are:" << std::endl;
+            ls(fsdbPath);
             std::cin >> enteredFilename;
             if (enteredFilename != "cancel")
             {
@@ -196,7 +203,7 @@ int main() {
                 }                
             }
         }
-        else 
+        else
         {
             std::cout << userInput << " is not a valid command" << std::endl;
         }
