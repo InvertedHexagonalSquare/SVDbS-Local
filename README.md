@@ -1,4 +1,4 @@
-# SVDbS-Local v.0.0.2
+# SVDbS-Local v.1.3.2
 Lightweight database system coded in C++
 
 The commands are written word-for-word, so command syntax is usually like this:
